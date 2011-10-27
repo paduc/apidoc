@@ -19,7 +19,7 @@ Features
 TODO
 ===================================
 <ul>
-  <li>Nicer JSON display</li>
+  <li>Nicer JSON display: use <a href="http://pygments.appspot.com/">Pygment API</a></li>
   <li>Put css in a separate file</li>
   <li>Load the model from a separate file</li>
   <li>Load the api doc from a separate file</li>
