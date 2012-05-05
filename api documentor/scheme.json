@@ -72,8 +72,8 @@
 									"value": "3212312312312312"
 								}
 							],
-							"payload": "/fixtures/resourcebis_payload.json",
-							"response": "/fixtures/resourcebis_response.json"
+							"payload": "fixtures/resourcebis_payload.json",
+							"response": "fixtures/resourcebis_response.json"
 						}
 					]
 				}
