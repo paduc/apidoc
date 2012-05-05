@@ -90,12 +90,12 @@ header h1{
   margin: 10px 20px;
 }
 
-  .api-summary > ul{
+  .summary-container ul.section-list {
     padding-left: 20px;
     list-style: none;
   }
 
-    .api-summary ul.list > li > a{
+    .summary-container ul.section-list > li > a {
       text-decoration: none;
       color: black;
       font-weight: bold;
@@ -103,7 +103,7 @@ header h1{
       float: left;
     }
 
-    .api-summary li ul{      
+    .summary-container li ul{      
       margin: 5px 0;
       width: 460px;
       float: left;
@@ -200,6 +200,10 @@ header h1{
           border: 1px solid #CCC;
           border-left: 0;
           font-size: 14px;
+        }
+
+        .request > .example-response.unloaded::after {
+          content: "load fixture";
         }
 
         .request > .example-response.open {

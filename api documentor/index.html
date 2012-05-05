@@ -21,22 +21,22 @@
 </header>
 <div class="main">
 
-	<div class="section api-summary">
+	<div class="section">
 		<!-- This zone is AUTOMATICALLY populated-->
 		<div class="title">Summary</div>
-		<ul class="list"></ul>
+		<div class="summary-container"></div>
 		<div class="clearfix"></div>
 	</div>
 
 
 </div>
 <footer>
-
 </footer>
 
 <script src="js/libs/jquery-1.7.1.min.js"></script>
 <script src="js/libs/rainbow-custom.min.js"></script>
 <script src="js/libs/underscore.js"></script>
+<script src="js/api-documentor.js"></script>
 
 
 <!--                    -->
@@ -47,7 +47,7 @@
 <script type="text/template" id="section-template">
 
   <!-- API SECTION -->
-  <div class="section">
+  <div class="section" id="<%=encodeURI(section.title.replace(' ','_'))%>">
     
     <!-- Section title -->
     <div class="title"><%=section.title%></div>
@@ -58,14 +58,13 @@
 
   </div>
   <!-- / API SECTION -->
-
 </script>
 
 <!--  ACTION VIEW       -->
 <script type="text/template" id="action-template">
 
   <!-- API ACTION START -->
-    <div class="action">
+    <div class="action" id="<%=encodeURI(action.title.replace(' ','_'))%>">
 
       <!-- Left Part: action description -->
       <div class="description">
@@ -117,10 +116,7 @@
       <div class="clearfix"></div>
     </div>
     <!-- API ACTION END-->
-
 </script>
-
-
 
 <!--  EXAMPLE VIEW      -->
 <script type="text/template" id="example-template">
@@ -138,20 +134,19 @@
 
   <% if(example.payload){%>
     <div class="subtitle">Payload:</div>
-    <div class="example-response">
-      <pre><code data-language="javascript"><%=example.payload%></code></pre>  
+    <div class="example-response unloaded">
+      <pre><code data-fixture=<%=example.payload%>><%=example.payload%></code></pre>  
     </div>
   <% } %>
 
   <% if(example.response){%>
     <div class="subtitle">Response:</div>
-    <div class="example-response">
-      <pre><code data-language="javascript"><%=example.response%></code></pre>  
+    <div class="example-response unloaded">
+      <pre><code data-fixture=<%=example.response%>><%=example.response%></code></pre>  
     </div>
   <% } %>
   
   <br>
-
 </script>
 
 
@@ -160,93 +155,60 @@
 <script>
 
 // Open / close the json example
-$(".example-response").on("click", function(){
+$(".main").on("click",".example-response.loaded",function(){
 	$(this).toggleClass("open");
+});
+
+// Load the json fixture
+$(".main").on("click",".example-response.unloaded",function(){
+
+  $this = $(this);
+
+  this.code_el = $this.find('code');
+  
+  // get the fixture uri for the data-fixture attribute in the <code> element
+  var fixture_uri = this.code_el.data('fixture');
+  
+  if(fixture_uri){
+
+    // fetch the fixture uri
+    $.ajax({
+      url: fixture_uri,
+      dataType: "html", // we do not want the JSON to be parsed before display
+      context: this, // set the context for the async callbacks
+      success: function(value){
+
+        // insert a highlighted version of the json
+        Rainbow.color(value, 'javascript', (function(_this){ return function(highlighted_code){
+          _this.code_el.html(highlighted_code);
+        }; })(this));
+
+        // remember that this fixture has been loaded
+        $this.removeClass('unloaded');
+        $this.addClass('loaded');
+      },
+      error: function(){
+        window.alert("Can't load "+fixture_uri);
+      }
+    });
+
+  }
+
 });
 
 $(document).ready(function() {
 
-    
-    function render(model){
-      // main section template
-      var section_template = _.template($('#section-template').html());
-      
-      // inner templates
-      var inner_templates = {};
-      inner_templates.action_template = _.template($('#action-template').html());
-      inner_templates.example_template = _.template($('#example-template').html());
-
-      // select the place where to put the sections
-      var main = $(".main");
-
-      _.each(model.sections, function(section){
-        console.log(JSON.stringify(section));
-        main.append(section_template({section: section,templates: inner_templates}));
-        
-      });
-
-      // once everything is drawn, create the summary
-      generateSummary();
-    };
-
-    $.ajax({
-      url: "scheme.json",
-      success: function(value){
-       render(value);
-      }
+    var AD = new ApiDocumentor({
+      section_template: $('#section-template').html(),
+      action_template: $('#action-template').html(),
+      example_template: $('#example-template').html(),
+      target: $(".main"),
+      generateSummary: true,
+      summaryTarget: $('.summary-container')
     });
 
-    function generateSummary() {
-
-      $('.section').each(function(index){
-
-        console.log("found section");
-
-        // Get all the action from the section
-        var actions = $(this).find(".action");
-
-        // if there are actions in this section, create it in the summary
-        if(actions.length > 0){
-
-          // get the title from the <div class=title></div>
-          var section_title = $(this).find(".title").first().html();
-
-          // create an anchor uri for this section
-          var section_uri = encodeURI(section_title.replace(" ","_"));
-
-          // add an anchor to the section
-          $(this).attr('id',section_uri);
-
-          // create the html elements for the section
-          var section_el = $("<li><a href=#"+section_uri+">"+section_title+"</a><div class=clearfix></div><ul class=action-titles></ul><ul class=end-points></ul></li>");
-
-          // Add the html element to the api list element
-          $('.api-summary > .list').append(section_el);
-
-          // for each action, add it in this section's list
-          actions.each(function(index){
-            var action = $(actions[index]);
-            var action_title = action.find(".description > .title").html();
-            var action_uri = encodeURI(action_title.replace(" ","_"));
-
-
-            // add an anchor to the action
-            action.attr('id',action_uri);
-
-            // add a link in the end-points list
-            section_el.find('.end-points').append("<li><a href='#"+action_uri+"'>"+action.find('.request > .title').html()+"</a></li>");
-
-            // add a link in the action-titles list
-            section_el.find('.action-titles').append("<li><a href='#"+action_uri+"'>"+action.find('.description > .title').html()+"</a></li>");
-          });
-
-
-
-        }
-
-
-      });
-    }
+    AD.fetch('scheme.json');
+    
 });
 </script>
 
