@@ -72,8 +72,10 @@ var ApiDocumentor = function(options){
 
       // once everything is drawn, create the summary
       if(this.generateSummary) this.renderSummary();
-    };
 
+      // activate response/payload examples (dynamic loading)
+      this.activateExamples();
+    };
 
     this.renderSummary = function() {
 
@@ -114,6 +116,54 @@ var ApiDocumentor = function(options){
 	          });
 
 	   	});
-
     }
+
+    this.activateExamples = function(){
+
+    	//
+	    // listen for click events on the examples
+	    //
+    	// Open / close the json example
+		this.target && this.target.on("click",".example-response.loaded",function(){
+			$(this).toggleClass("open");
+		});
+
+		// Load the json fixture
+		this.target && this.target.on("click",".example-response.unloaded",function(){
+
+		  $this = $(this);
+
+		  this.code_el = $this.find('code');
+		  
+		  // get the fixture uri for the data-fixture attribute in the <code> element
+		  var fixture_uri = this.code_el.data('fixture');
+		  
+		  if(fixture_uri){
+
+		    // fetch the fixture uri
+		    $.ajax({
+		      url: fixture_uri,
+		      dataType: "html", // we do not want the JSON to be parsed before display
+		      context: this, // set the context for the async callbacks
+		      success: function(value){
+
+		        // insert a highlighted version of the json
+		        Rainbow.color(value, 'javascript', (function(_this){ return function(highlighted_code){
+		          _this.code_el.html(highlighted_code);
+		        }; })(this));
+
+		        // remember that this fixture has been loaded
+		        $this.removeClass('unloaded');
+		        $this.addClass('loaded');
+		      },
+		      error: function(){
+		        window.alert("Can't load "+fixture_uri);
+		      }
+		    });
+
+		  }
+
+		});
+    }
+    
 };
