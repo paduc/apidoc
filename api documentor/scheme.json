@@ -41,7 +41,7 @@
 									"value": "3212312312312312"
 								}
 							],
-							"response": "/fixtures/resource.json"
+							"response": "fixtures/resource.json"
 						}
 					]
 				},
