@@ -1,0 +1,83 @@
+{
+	"sections": [
+		{
+			"title": "Section 1",
+			"actions": [
+				{
+					"title": "Action 1",
+					"description": "This is the action 1 description",
+					"uri": "/api/resource",
+					"method": "GET",
+					"authentication": true,
+					"params": [
+						{
+							"id": "param1",
+							"description": "first parameter"
+						},
+						{
+							"id": "param2",
+							"description": "second parameter",
+							"optionnal": true
+						}
+					],
+					"errors": [
+						{
+							"code": 413,
+							"description": "too much data"
+						},
+						{
+							"code": 409,
+							"description": "already exists"
+						}
+					],
+					"examples": [
+						{
+							"title": "Example 1",
+							"method": "GET",
+							"uri": "/api/resource?id=234",
+							"headers": [
+								{
+									"key": "X-MyAuthSystem",
+									"value": "3212312312312312"
+								}
+							],
+							"response": "/fixtures/resource.json"
+						}
+					]
+				},
+				{
+					"title": "Action 2",
+					"description": "This is the action 2 description",
+					"uri": "/api/resourcebis",
+					"method": "POST",
+					"authentication": false,
+					"params": [
+						{
+							"id": "param1",
+							"description": "first parameter"
+						},
+						{
+							"id": "param2",
+							"description": "second parameter"
+						}
+					],
+					"examples": [
+						{
+							"title": "Example",
+							"method": "POST",
+							"uri": "/api/resourcebis",
+							"headers": [
+								{
+									"key": "X-MyAuthSystem",
+									"value": "3212312312312312"
+								}
+							],
+							"payload": "/fixtures/resourcebis_payload.json",
+							"response": "/fixtures/resourcebis_response.json"
+						}
+					]
+				}
+			]
+		}
+	]
+}
