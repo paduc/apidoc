@@ -73,8 +73,17 @@ var ApiDocumentor = function(options){
     // once everything is drawn, create the summary
     if(this.generateSummary) this.renderSummary();
 
-    // activate response/payload examples (dynamic loading)
-    this.activateExamples();
+    if(this.autoLoadFixtures){
+    	// download all response/payload examples (auto load)
+    	fetchAllFixtures();
+    }
+    else{
+    	// activate response/payload examples (dynamic loading)
+    	this.activateDynamicFixtures();
+    }
+    
+    // activate hide/show examples
+    this.activateExamples();	
 
     // color what needs to be colored
     $('.uncolored code').each(function(){
@@ -127,14 +136,16 @@ var ApiDocumentor = function(options){
   }
 
   this.activateExamples = function(){
-
-  	//
+		//
     // listen for click events on the examples
     //
   	// Open / close the json example
 		this.target && this.target.on("click",".example-response.loaded",function(){
 			$(this).toggleClass("open");
 		});
+  };
+
+  this.activateDynamicFixtures = function(){
 
 		// Load the json fixture
 		this.target && this.target.on("click",".example-response.unloaded",function(){
@@ -146,13 +157,43 @@ var ApiDocumentor = function(options){
 		  // get the fixture uri for the data-fixture attribute in the <code> element
 		  var fixture_uri = this.code_el.data('fixture');
 		  
-		  if(fixture_uri){
+		  fetchFixture(fixture_uri,this);
+
+		});
+  }
+
+
+  //
+  // Get all the fixtures and display them
+  //
+  function fetchAllFixtures(){
+
+		// Load the json fixture
+		$(".example-response.unloaded").each(function(){
+
+		  this.code_el = $(this).find('code');
+		  
+		  // get the fixture uri for the data-fixture attribute in the <code> element
+		  var fixture_uri = this.code_el.data('fixture');
+		  
+			fetchFixture(fixture_uri,this);		  
+
+		});
+
+  }
+
+
+  //
+  // Load one dynamic fixture
+  //
+  function fetchFixture(fixture_uri,context){
+  	if(fixture_uri){
 
 		    // fetch the fixture uri
 		    $.ajax({
 		      url: fixture_uri,
 		      dataType: "html", // we do not want the JSON to be parsed before display
-		      context: this, // set the context for the async callbacks
+		      context: context, // set the context for the async callbacks
 		      success: function(value){
 
 		        // insert a highlighted version of the json
@@ -161,6 +202,7 @@ var ApiDocumentor = function(options){
 		        }; })(this));
 
 		        // remember that this fixture has been loaded
+		        $this = $(this);
 		        $this.removeClass('unloaded');
 		        $this.addClass('loaded');
 		      },
@@ -170,8 +212,6 @@ var ApiDocumentor = function(options){
 		    });
 
 		  }
-
-		});
   }
 
   //
