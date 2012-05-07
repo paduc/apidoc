@@ -22,9 +22,9 @@ Take a look at the example.
 
 ##Dependencies##
 <ul>
-  <li>[jQuery](http://jquery.com/)</li>
-  <li>[Underscore](http://documentcloud.github.com/underscore/): templating and utilities</li>
-  <li>[Rainbowjs](http://craig.is/making/rainbows): code highlighting</li>
+  <li><a href="http://jquery.com/">jQuery</a></li>
+  <li><a href="http://documentcloud.github.com/underscore/">Underscore</a>: templating and utilities</li>
+  <li><a href="http://craig.is/making/rainbows">Rainbowjs</a>: code highlighting</li>
 </ul>
 
 ##Licence##
