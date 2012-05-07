@@ -173,5 +173,82 @@ var ApiDocumentor = function(options){
 
 		});
   }
+
+  //
+  // Extract the scheme from a html file
+  //
+  // function extractScheme() {
+
+  //     var scheme = {
+  //       sections: []
+  //     };
+
+  //     $('.section').each(function(){
+
+  //       console.log("found section");
+
+  //       var section = {
+  //         title: $(this).find(".title").html(),
+  //         actions: []
+  //       };
+
+  //       // Get all the action from the section
+  //       var actions = $(this).find(".action");
+        
+  //       // if there are actions in this section
+  //       if(actions.length > 0){
+
+  //         // for each action, add it in this section's list
+  //         actions.each(function(){
+  //           $this = $(this);
+  //           var req_title = $this.find(".request > .title").html();
+
+  //           var action = {
+  //             title: $this.find(".description > .title").html(),
+  //             description: $this.find(".description > .more-info").html(),
+  //             uri: req_title.substring(req_title.indexOf(' ')),
+  //             method: req_title.substring(0,req_title.indexOf(' ')),
+  //             authentication: false,
+  //             params: [],
+  //             errors: [],
+  //             examples: []
+  //           };
+
+
+  //           // Extract params and errors
+  //           var params_el = $this.find(".description > ul.parameters");
+  //           if(params_el){
+  //             // First one is parameters
+  //             var parameters = params_el.first().find('li');
+  //             parameters.each(function(){
+  //               action.params.push({
+  //                 id: $(this).find('.name').html(),
+  //                 description: $(this).find('.description').html() || ""
+  //               });
+  //             });
+
+  //             // second one is errors
+  //             var errors = params_el.next().find('li');
+  //             errors && errors.each(function(){
+  //               actions.errors.push({
+  //                 code: $(this).find('.name').html(),
+  //                 description: $(this).find('.description').html() || ""
+  //               });
+  //             });
+  //           }
+
+  //           section.actions.push(action);
+
+
+  //         });
+
+
+
+  //       }
+  //       scheme.sections.push(section);
+  //     });
+
+  //     console.log(JSON.stringify(scheme));
+  //   }
     
 };
