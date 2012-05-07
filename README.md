@@ -12,13 +12,40 @@ _Please feel free to add or fix things!_
   <li>Generated summary of your sections and actions</li>
 </ul>
 
-##How to use it##
+##How it works##
 Take a look at the example.
-- scheme.json contains the description of the api.
-- index.html loads scheme.json through api documentor and contains all the templates
-- fixtures/ contains some request samples mentionned in scheme.json
-- css/style.css contains all styles (including css normalize)
-- css/theme.css gives a gist-like highlighting to the json samples
+- __scheme.json__ contains the description of the api.
+- __index.html__ loads scheme.json through api documentor and contains all the templates
+
+```javascript
+var AD = new ApiDocumentor({
+  // templates, don't bother if you like them the way they are
+  section_template: $('#section-template').html(),
+  action_template: $('#action-template').html(),
+  example_template: $('#example-template').html(),
+  
+  // wherever you want the api actions to be appended
+  target: $(".main"), 
+  
+  // set to true if you want a summary to be generated
+  generateSummary: true, 
+  
+  // where you want the summary to be appended (if generateSummary: true)
+  summaryTarget: $('.summary-container'), 
+  
+  // set to true if you want to load external fixtures automatically
+  // if set to false, loads when user clicks
+  autoLoadFixtures: true 
+});
+
+// load the scheme file
+AD.fetch('scheme.json');
+```
+    
+    
+- __fixtures/__ contains some request samples mentionned in scheme.json
+- __css/style.css__ contains all styles (including css normalize)
+- __css/theme.css__ gives a gist-like highlighting to the json samples
 
 ##Dependencies##
 <ul>
