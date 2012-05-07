@@ -7,8 +7,8 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Qunb API documentation</title>
-	<meta name="author" content="Qunb team">
+	<title>Api documentor</title>
+	<meta name="author" content="paduc">
 
 	<meta name="viewport" content="width=device-width">
 
@@ -22,9 +22,8 @@
 <div class="main">
 
 	<div class="section">
-		<!-- This zone is AUTOMATICALLY populated-->
 		<div class="title">Summary</div>
-		<div class="summary-container"></div>
+		<div class="summary-container"><!-- This zone is AUTOMATICALLY populated--></div>
 		<div class="clearfix"></div>
 	</div>
 
@@ -134,16 +133,37 @@
 
   <% if(example.payload){%>
     <div class="subtitle">Payload:</div>
+    <% if(typeof example.payload === "object" && example.payload.url) { %> 
     <div class="example-response unloaded">
-      <pre><code data-fixture=<%=example.payload%>><%=example.payload%></code></pre>  
+      <pre><code data-fixture=<%=example.payload.url%>><%=example.payload.url%></code></pre>  
     </div>
+    <% } else if(typeof example.payload === "string") { %> 
+    <div class="example-response loaded">
+      <pre><code><%=example.payload%></code></pre>  
+    </div>
+    <% } else { %> 
+    <div class="example-response loaded uncolored">
+      <pre><code><%=JSON.stringify(example.payload, null, 2)%></code></pre>  
+    </div>
+    <% }%>
+
   <% } %>
 
   <% if(example.response){%>
     <div class="subtitle">Response:</div>
+    <% if(typeof example.response === "object" && example.response.url) { %> 
     <div class="example-response unloaded">
-      <pre><code data-fixture=<%=example.response%>><%=example.response%></code></pre>  
+      <pre><code data-fixture=<%=example.response.url%>><%=example.response.url%></code></pre>  
     </div>
+    <% } else if(typeof example.response === "string") { %> 
+    <div class="example-response loaded">
+      <pre><code><%=example.response%></code></pre>  
+    </div>
+    <% } else { %> 
+    <div class="example-response loaded uncolored">
+      <pre><code><%=JSON.stringify(example.response, null, 2)%></code></pre>  
+    </div>
+    <% }%>
   <% } %>
   
   <br>

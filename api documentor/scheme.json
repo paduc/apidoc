@@ -41,7 +41,9 @@
 									"value": "3212312312312312"
 								}
 							],
-							"response": "fixtures/resource.json"
+							"response": {
+								"url": "fixtures/resource.json"
+							}
 						}
 					]
 				},
@@ -72,8 +74,10 @@
 									"value": "3212312312312312"
 								}
 							],
-							"payload": "fixtures/resourcebis_payload.json",
-							"response": "fixtures/resourcebis_response.json"
+							"payload": "this is a string payload",
+							"response": {
+								"this": "is a response set as an object in the json"
+							}
 						}
 					]
 				}

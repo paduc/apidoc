@@ -40,90 +40,98 @@ var ApiDocumentor = function(options){
 	};
 	
 	this.render = function(){
-      
-      // make sure the templates are set
-      if(!(this.section_template && this.action_template && this.example_template)){
-      	console.log("Missing templates. Dont forget to set section_template, action_template and example_template");
-      	this.section_template || console.log("missing section");
-      	this.action_template || console.log("missing action");
-      	this.example_template || console.log("missing example");
-      	return;
-      }
 
-      // make sure the target is set
-      if(!this.target){
-      	console.log("Missing the target. Don't forget to set target.");
-      	return;
-      }
-
-      // main section template
-      var section_template = _.template(this.section_template);
-      
-      // inner templates
-      var inner_templates = {};
-      inner_templates.action_template = _.template(this.action_template);
-      inner_templates.example_template = _.template(this.example_template);
-
-      // insert the sections one by one
-      $target = this.target;
-      this.model && this.model.sections && _.each(this.model.sections, function(section){
-        $target.append(section_template({section: section,templates: inner_templates}));
-      });
-
-      // once everything is drawn, create the summary
-      if(this.generateSummary) this.renderSummary();
-
-      // activate response/payload examples (dynamic loading)
-      this.activateExamples();
-    };
-
-    this.renderSummary = function() {
-
-    	if(!this.summaryTarget){
-    		console.log("Api-Documentor.js: can't find summaryTarget");
-    		return;
-    	}
-
-    	// Create a list and append it to the target
-    	this.summaryTarget.append('<ul class="section-list"></ul>');
-    	var section_list = this.summaryTarget.find('.section-list');
-
-    	// Add each section to the summary
-    	this.model && this.model.sections && _.each(this.model.sections, function(section){
-			
-    		// get the title from the <div class=title></div>
-	        var section_title = section.title;
-
-	        // create an anchor uri for this section
-	        var section_uri = encodeURI(section_title.replace(" ","_"));
-
-	        // create the html elements for the section
-	        var section_el = $("<li><a href=#"+section_uri+">"+section_title+"</a><div class=clearfix></div><ul class=action-titles></ul><ul class=end-points></ul></li>");
-
-	        // Add the html element to the api list element
-	        section_list.append(section_el);	
-
-    		section.actions && (section.actions.length > 0) && _.each(section.actions, function(action){
-
-	            var action_title = action.title;
-	            var action_uri = encodeURI(action_title.replace(" ","_"));
-
-	            // add a link in the end-points list
-	            section_el.find('.end-points').append("<li><a href='#"+action_uri+"'>"+action.method+" "+action.uri+"</a></li>");
-
-	            // add a link in the action-titles list
-	            section_el.find('.action-titles').append("<li><a href='#"+action_uri+"'>"+action.title+"</a></li>");
-	          });
-
-	   	});
+    // make sure the templates are set
+    if(!(this.section_template && this.action_template && this.example_template)){
+    	console.log("Missing templates. Dont forget to set section_template, action_template and example_template");
+    	this.section_template || console.log("missing section");
+    	this.action_template || console.log("missing action");
+    	this.example_template || console.log("missing example");
+    	return;
     }
 
-    this.activateExamples = function(){
+    // make sure the target is set
+    if(!this.target){
+    	console.log("Missing the target. Don't forget to set target.");
+    	return;
+    }
 
-    	//
-	    // listen for click events on the examples
-	    //
-    	// Open / close the json example
+    // main section template
+    var section_template = _.template(this.section_template);
+    
+    // inner templates
+    var inner_templates = {};
+    inner_templates.action_template = _.template(this.action_template);
+    inner_templates.example_template = _.template(this.example_template);
+
+    // insert the sections one by one
+    $target = this.target;
+    this.model && this.model.sections && _.each(this.model.sections, function(section){
+      $target.append(section_template({section: section,templates: inner_templates}));
+    });
+
+    // once everything is drawn, create the summary
+    if(this.generateSummary) this.renderSummary();
+
+    // activate response/payload examples (dynamic loading)
+    this.activateExamples();
+
+    // color what needs to be colored
+    $('.uncolored code').each(function(){
+    	$this = $(this);
+     	Rainbow.color($this.html(),'javascript',function(colored){ $this.html(colored); } ); 
+ 	  });
+
+  };
+
+  this.renderSummary = function() {
+
+  	if(!this.summaryTarget){
+  		console.log("Api-Documentor.js: can't find summaryTarget");
+  		return;
+  	}
+
+  	// Create a list and append it to the target
+  	this.summaryTarget.append('<ul class="section-list"></ul>');
+  	var section_list = this.summaryTarget.find('.section-list');
+
+  	// Add each section to the summary
+  	this.model && this.model.sections && _.each(this.model.sections, function(section){
+		
+			// get the title from the <div class=title></div>
+	    var section_title = section.title;
+
+	    // create an anchor uri for this section
+	    var section_uri = encodeURI(section_title.replace(" ","_"));
+
+	    // create the html elements for the section
+	    var section_el = $("<li><a href=#"+section_uri+">"+section_title+"</a><div class=clearfix></div><ul class=action-titles></ul><ul class=end-points></ul></li>");
+
+	    // Add the html element to the api list element
+	    section_list.append(section_el);	
+
+			section.actions && (section.actions.length > 0) && _.each(section.actions, function(action){
+
+	      var action_title = action.title;
+	      var action_uri = encodeURI(action_title.replace(" ","_"));
+
+	      // add a link in the end-points list
+	      section_el.find('.end-points').append("<li><a href='#"+action_uri+"'>"+action.method+" "+action.uri+"</a></li>");
+
+	      // add a link in the action-titles list
+	      section_el.find('.action-titles').append("<li><a href='#"+action_uri+"'>"+action.title+"</a></li>");
+
+	    });
+
+   	});
+  }
+
+  this.activateExamples = function(){
+
+  	//
+    // listen for click events on the examples
+    //
+  	// Open / close the json example
 		this.target && this.target.on("click",".example-response.loaded",function(){
 			$(this).toggleClass("open");
 		});
@@ -164,6 +172,6 @@ var ApiDocumentor = function(options){
 		  }
 
 		});
-    }
+  }
     
 };
