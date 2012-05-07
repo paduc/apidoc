@@ -2,6 +2,8 @@
 
 Api Documentor is a simple javascript/html workbench to help you easily document your api.
 
+<a href="http://paduc.github.com/apidoc/example/">See live example</a>
+
 _Please feel free to add or fix things!_
 
 ##Features##
