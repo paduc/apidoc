@@ -42,13 +42,23 @@
 $(document).ready(function() {
 
     var AD = new ApiDocumentor({
+      // templates, don't bother if you like them the way they are
       section_template: $('#section-template').html(),
       action_template: $('#action-template').html(),
       example_template: $('#example-template').html(),
-      target: $(".main"),
-      generateSummary: true,
-      summaryTarget: $('.summary-container'),
-      autoLoadFixtures: true
+      
+      // wherever you want the api actions to be appended
+      target: $(".main"), 
+      
+      // set to true if you want a summary to be generated
+      generateSummary: true, 
+      
+      // where you want the summary to be appended (if generateSummary: true)
+      summaryTarget: $('.summary-container'), 
+      
+      // set to true if you want to load external fixtures automatically
+      // if set to false, loads when user clicks
+      autoLoadFixtures: true 
     });
 
     AD.fetch('scheme.json');
